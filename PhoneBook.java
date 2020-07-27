@@ -1,79 +1,129 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.HashSet;
+import java.util.Iterator;
 
 public class PhoneBook {
-	
+
 	private static PhoneBook pb;
-	private PhoneInfo[] pInfoArr;
-	private int numOfPhoneInfo;
-	
-	private PhoneBook(int size) 
+	private HashSet<PhoneInfo> set;
+	private Iterator<PhoneInfo> itr;
+	private ObjectInputStream objInStream;
+	private ObjectOutputStream objOutStream;
+
+	private PhoneBook() 
 	{
-		pInfoArr = new PhoneInfo[size];
+		loadData();
 	}
-	
-	public static PhoneBook getPhoneBook(int size)
+
+	public void loadData()
+	{
+		try {
+			objInStream = new ObjectInputStream(new FileInputStream("phoneInfo.data"));
+		} catch (FileNotFoundException e) {
+			set = new HashSet<PhoneInfo>();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			if(objInStream != null)
+				set = (HashSet<PhoneInfo>)objInStream.readObject();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			if(objInStream != null)
+				objInStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static PhoneBook getPhoneBook()
 	{
 		if(pb==null)
-			pb = new PhoneBook(size);
+			pb = new PhoneBook();
 		return pb;
 	}
-	
-	public boolean insertPhoneInfo(String name, String phoneNumber, String birthday)
-	{
-		if(numOfPhoneInfo >= pInfoArr.length)
-			return false;
-		PhoneInfo pInfo = new PhoneInfo(name, phoneNumber, birthday);
-		pInfoArr[numOfPhoneInfo++] = pInfo;
-		return true;
+
+	public boolean insertPhoneInfo(PhoneInfo phoneInfo)
+	{		
+		return set.add(phoneInfo);
 	}
-	
+
 	public boolean searchPhoneInfoByName(String name)
 	{
+		PhoneInfo pInfo = null;
+		itr = set.iterator();
 		boolean result = false;
-		for(int i=0;i<numOfPhoneInfo;i++)
-		{
-			if( name.compareTo(pInfoArr[i].getName()) == 0 )
+
+		while(itr.hasNext())
+		{			
+			pInfo = itr.next();
+			if(pInfo.getName().equals(name))
 			{
-				pInfoArr[i].printCurrentState();
+				pInfo.printCurrentState();
 				result = true;
 			}
 		}
+
 		return result;
 	}
-	
-	public int searchPhoneInfoByPhoneNumber(String phoneNumber)
-	{
-		for(int i=0;i<numOfPhoneInfo;i++)
-		{
-			if( phoneNumber.compareTo(pInfoArr[i].getPhoneNumber()) == 0 )
-			{
-				return i;
-			}
-		}
-		
-		return -1;
-	}
-	
+
 	public boolean deletePhoneInfoByPhoneNumber(String phoneNumber)
 	{
-		boolean deleteResult = false;
-		int searchResult = searchPhoneInfoByPhoneNumber(phoneNumber);
-		if( searchResult != -1 )
-		{
-			for(int i=searchResult;i<numOfPhoneInfo-1;i++)
-				pInfoArr[i] = pInfoArr[i+1];
-			
-			pInfoArr[numOfPhoneInfo-1] = null;
-			deleteResult = true;
-			numOfPhoneInfo--;
+		PhoneInfo pInfo = null;
+		itr = set.iterator();
+
+		while(itr.hasNext())
+		{			
+			pInfo = itr.next();
+			if(pInfo.getPhoneNumber().equals(phoneNumber))
+			{
+				itr.remove();
+				return true;
+			}
 		}
-		
-		return deleteResult;
+		return false;
 	}
-	
+
 	public void printAllPhoneInfo()
 	{
-		for(int i=0;i<numOfPhoneInfo;i++)
-			pInfoArr[i].printCurrentState();
-		System.out.println();
+		itr = set.iterator();
+		while(itr.hasNext())
+		{
+			itr.next().printCurrentState();
+		}
+	}
+
+	public void quitProgram() {
+		if(set.size() == 0) return;
+		
+		try {
+			objOutStream = new ObjectOutputStream(new FileOutputStream("phoneInfo.data"));
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			objOutStream.writeObject(set);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			objOutStream.close();
+		} catch (IOException e1) {
+			System.out.println("파일 닫기 오류");
+			e1.printStackTrace();
+		}
 	}
 }

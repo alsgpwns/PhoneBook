@@ -6,7 +6,7 @@ public class PhoneBookUI {
 	
 	public PhoneBookUI()
 	{
-		this.pb = PhoneBook.getPhoneBook(100);
+		this.pb = PhoneBook.getPhoneBook();
 	}
 	
 	public void printMenu()
@@ -20,21 +20,45 @@ public class PhoneBookUI {
 		System.out.println("선택 : ");
 	}
 	
-	public void inputPhoneInfo()
+	public void inputMenu()
 	{
-		String name, phoneNumber, birthday;
+		System.out.println("데이터 입력을 시작합니다.");
+		System.out.println("1. 일반, 2. 대학, 3. 회사");
+		System.out.print("선택 >>");
+	}
+	
+	public void inputPhoneInfo(int menu)
+	{
+		String name, phoneNumber, major, company;
+		int year=0;
 		boolean result;
+		PhoneInfo phoneInfo = null;
 		
 		System.out.println("데이터 입력을 시작합니다.");
 		System.out.println("이름 : ");
 		name = sc.nextLine();
 		System.out.println("전화번호 : ");
 		phoneNumber = sc.nextLine();
-		System.out.println("생년월일 : ");
-		birthday = sc.nextLine();		
-		result = pb.insertPhoneInfo(name, phoneNumber, birthday);
+		
+		if(menu == 1)	// 추가
+			phoneInfo = new PhoneInfo(name, phoneNumber);
+		else if(menu == 2)
+		{
+			System.out.println("전공 : ");
+			major = sc.nextLine();
+			System.out.println("학년 : ");
+			year = sc.nextInt();
+			phoneInfo = new PhoneUnivInfo(name, phoneNumber, major, year);
+		}
+		else if(menu==3)
+		{
+			System.out.println("회사 : ");
+			company = sc.nextLine();
+			phoneInfo = new PhoneCompanyInfo(name, phoneNumber, company);
+		}
+		result = pb.insertPhoneInfo(phoneInfo);
 		if(result == false)
-			System.out.println("더이상 데이터를 저장할 수 없습니다.");
+			System.out.println("이미 등록된 데이터 입니다.");
 		else System.out.println("데이터 입력이 완료되었습니다.");
 	}
 	
@@ -66,6 +90,7 @@ public class PhoneBookUI {
 	public void quitProgram()
 	{
 		System.out.println("프로그램을 종료합니다.");
+		pb.quitProgram();
 		sc.close();
 	}
 }
