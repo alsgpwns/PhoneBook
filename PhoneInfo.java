@@ -1,55 +1,23 @@
-import java.util.Scanner;
-
-class PhoneInfo
+public class PhoneInfo
 {
-	private String name, phoneNumber,birthday;
+	private String name;
+	private String phone;
+	private String birth;
 
-	public void PhoneInfo(String name, String phoneNumber, String birthday )
+	public PhoneInfo(String name, String phone, String birth)
 	{
 		this.name = name;
-		this.phoneNumber = phoneNumber;
-		this.birthday = birthday;
-
+		this.phone = phone;
+		this.birth = birth;
 	}
-
-	/*public Info(String name, String phoneNumber, String birthday )
+	public void showPhoneInfo()
 	{
-		this(name, phoneNumber, null);
-	}*/
-
-	public void set()
-	{
-
-		Scanner sc=new Scanner(System.in);
-
-
-		System.out.print("이름: ");
-		String name= sc.nextLine();
-
-		System.out.print("전화번호: ");
-		String phoneNumber= sc.nextLine();
-
-		System.out.print("생년월일: ");
-		String birthday= sc.nextLine();
-
-		PhoneInfo(name, phoneNumber, birthday);
+		System.out.println("name : " + name);
+		System.out.println("phone : " + phone);
+		System.out.println("birth : " + birth);
 	}
-
-	
-	public void result()
+	public String getName()
 	{
-		System.out.println("이름: " +name+ ", 전화번호: " +phoneNumber+ ", 생년월일"+birthday);
+		return name;
 	}
-
-	
-
-	public static void main(String[] args)
-	{
-		Scanner sc=new Scanner(System.in);
-
-		PhoneInfo p1 = new PhoneInfo();
-		p1.set();
-		p1.result();
-	}
-
 }
