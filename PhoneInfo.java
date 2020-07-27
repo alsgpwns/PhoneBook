@@ -1,23 +1,32 @@
-public class PhoneInfo
-{
-	private String name;
-	private String phone;
-	private String birth;
 
-	public PhoneInfo(String name, String phone, String birth)
-	{
+public class PhoneInfo {
+	private String name;
+	private String phoneNumber;
+	private String birthday;
+	
+	public PhoneInfo(String name, String phoneNumber, String birthday) {
 		this.name = name;
-		this.phone = phone;
-		this.birth = birth;
+		this.phoneNumber = phoneNumber;
+		this.birthday = birthday;
 	}
-	public void showPhoneInfo()
-	{
-		System.out.println("name : " + name);
-		System.out.println("phone : " + phone);
-		System.out.println("birth : " + birth);
+	
+	public PhoneInfo(String name, String phoneNumber) {
+		this.name = name;
+		this.phoneNumber = phoneNumber;
 	}
-	public String getName()
-	{
+	
+	public String getName() {
 		return name;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void printCurrentState()
+	{
+		System.out.println("이름 : "  + name);
+		System.out.println("전화번호 : "  + phoneNumber);
+		System.out.println("생일 : "  + birthday);
 	}
 }
