@@ -11,6 +11,7 @@ public class PhoneInfoMain
 		PhoneInfo[] infoArr = new PhoneInfo[100];
 		int cnt = 0;
 		boolean sflag = false;
+		int idx = 0;
 
 		while(true)
 		{
@@ -52,6 +53,27 @@ public class PhoneInfoMain
 				sflag = false;
 				break;
 			case 3:
+				System.out.println("삭제하시고자 하는 이름을 입력하세요.");
+				name = sc.nextLine();
+				for(int i=0;i<cnt;i++)
+				{
+					if(name.compareTo(infoArr[i].getName()) == 0)
+					{
+						idx = i;
+						sflag = true;						
+						break;
+					}
+				}
+				if(!sflag) System.out.println("삭제하시고자 하는 사람이 없습니다.");
+				else
+				{
+					for(int i = idx; i<cnt-1;i++)
+						infoArr[i] = infoArr[i+1];
+					infoArr[cnt-1] = null;
+					cnt--;
+					sflag = false;
+					System.out.println("삭제가 완료되었습니다.");
+				}				
 				break;
 			case 4:
 				for(int i=0;i<cnt;i++)
